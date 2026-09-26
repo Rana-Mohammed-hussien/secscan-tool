@@ -2,8 +2,8 @@
 check_ftp() {
    local target=$1
    local port=$2
-   echo "Starting FTP anonymous login check..."
-   echo "--- FTP Anonymous Login ---" | tee -a report/findings.txt
+   echo "Starting FTP anonymous login check on port $port..."
+   echo "--- FTP Anonymous Login (port $port)---" | tee -a report/findings.txt
    ftp_output=$(curl -s --connect-timeout 5 --ftp-pasv "ftp://$target:$port/" 2>&1)
    echo "$ftp_output" | tee -a report/findings.txt
    if echo "$ftp_output" | grep -qiE "230|anonymous|login successful|^drwx|^\-rw-"; then
@@ -95,11 +95,11 @@ check_http() {
    local target=$1
    local port=$2
    echo "Starting HTTP enumeration..."
-   echo "--- HTTP Headers ---" | tee -a report/findings.txt
+   echo "--- HTTP Headers (port $port)---" | tee -a report/findings.txt
    http_headers=$(curl -s -I --connect-timeout 5 "http://$target:$port/")
    echo "$http_headers" | tee -a report/findings.txt
    echo "" | tee -a report/findings.txt
-   echo "--- robots.txt ---" | tee -a report/findings.txt
+   echo "--- robots.txt(port $port) ---" | tee -a report/findings.txt
    robots_output=$(curl -s --connect-timeout 5 "http://$target:$port/robots.txt")
    echo "$robots_output" | tee -a report/findings.txt
    if echo "$http_headers" | grep -qi "Server:"; then
